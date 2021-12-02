@@ -11,13 +11,14 @@
     box-sizing: border-box;
     grid-template-columns: 500px 500px;
     height: 35vh;
-    border: 1px solid #d9d9d9;
+    border: 1px solid black;
     border-radius: 30px;
     text-align: center;
     align-items: center;
     background-color: white;
     box-shadow: 5px 5px #b3b3b3;
     position: relative;
+    vertical-align: center;
 }
 
 button {
@@ -38,4 +39,10 @@ input {
     position: absolute;
     top: 0;
     right: 0;
+}
+
+.subTotal {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
 }

@@ -3,21 +3,21 @@ import { Link } from 'react-router-dom';
 import classes from './MainNavigation.module.css';
 
 function MainNavigation(props) {
-    const {cartItems, cartCount} = props;
+    const { cartItems, favoriteItems } = props;
 
     return (
     <header className={classes.header}>
-        <h1>REACT WEB STORE</h1>
+        <h1>REACT SHOP</h1>
         <nav>
             <ul>
                 <li>
-                    <Link to='/products'>PRODUCTS</Link>    
+                    <Link to='/'>ALL PRODUCTS</Link>
                 </li>
                 <li>
-                    <Link to='/favorites'>FAVORITES</Link>    
+                    <Link to='/favorites'>FAVORITES ({favoriteItems.length})</Link>
                 </li>
                 <li>
-                    <Link to='/cart'>CART ({cartCount})</Link>
+                    <Link to='/cart'>CART ({cartItems.length})</Link>
                 </li>
             </ul>
         </nav>

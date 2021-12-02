@@ -1,15 +1,23 @@
+nav {
+    height: 100%;
+}
+
 .header {
     height: 100px;
     width: 100%;
     color: white;
     font-weight: bold;
-    background-color: #004d00;
+    background-color: #404040;
     display: flex;
     align-items: center;
     justify-content: space-around;
     padding-left: 10px;
     padding-right: 10px;
-    box-sizing: border-box;    
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    z-index: 10;
+    border: 5px solid #404040;
 }
 
 .header ul {
@@ -18,11 +26,14 @@
     display: flex;
     align-items: baseline;
     justify-content: space-around;
+    height: 100%;
+    margin: 0;
 }
 
 .header li{
     display: inline-block;
     width: 150px;
+    height: 100%;
 }
 
 .header a{
@@ -30,6 +41,18 @@
     color: white;
 }
 
-.header a:hover {
-    color: white;
+.header li:hover {
+    background-color: white;
+    cursor: pointer;
+}
+
+.header li:hover a {
+    color: #404040;
+}
+
+a {
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    padding-top: 25%;
 }

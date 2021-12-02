@@ -1,103 +1,108 @@
 import { Route, Switch } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import AllProductsPage from './pages/AllProducts';
 import FavoritesProductsPage from './pages/Favorites';
 import Cart from './pages/Cart';
 import MainNavigation from './components/layout/MainNavigation';
+import data from './data';
+import Footer from './components/layout/Footer';
+
 
 function App() {
+  const dummyData = data;
+  const [products, setProducts] = useState(dummyData);
   const [cartItems, setCart] = useState([]);
   const [favoriteItems, setFavoriteItems] = useState([]);
 
-  useEffect(() => {
-    console.log(cartItems)
-  }, [cartItems])
-
   const onAddToCart = (product) => {
-    console.log(product);
-    product.qty = parseInt(document.getElementById(product.id).value);
-    console.log(product.qty);
-    if (cartItems.length >= 1) {
-      for(let i=0; i<cartItems.length; i++) {
-        if(cartItems[i].id == product.id) {
-          cartItems[i].qty += product.qty;
-        } else {
-          console.log('THREE');
-          setCart([...cartItems, product]);
-        }
-      }
+    const exist = cartItems.find(x => x.id === product.id);
+    if (exist) {
+      setCart(cartItems.map(x => x.id === product.id ? {...exist, qty: exist.qty + 1} : x ))
     } else {
-      setCart([...cartItems, product]);
+      setCart([...cartItems, {...product, qty: 1}]);
     }
-    console.log(cartItems);
+  }
+
+  const onRemoveFromCart = (product) => {
+    const exist = cartItems.find((x) => x.id === product.id);
+    if (exist.qty === 1) {
+      setCart(cartItems.filter((x) => x.id !== product.id));
+    } else {
+      setCart(cartItems.map(x => x.id === product.id ? {...exist, qty: exist.qty - 1} : x ))
+    }
   }
 
   const onAddToFavorites = (product) => {
-    console.log(product);
-    setFavoriteItems([...favoriteItems, product]);
-  }
-
-  let filteredFavoriteProducts;
-  const removeFromFavorites = (product) => {
-    let favId = product.id;
-    filteredFavoriteProducts = favoriteItems.filter(function(product) {
-        return product.id !== favId;
-    });
-    setFavoriteItems(filteredFavoriteProducts);
-  }
-
-  let filteredCartProducts;
-  const removeFromCart = (product) => {
-    let cartId = product.id;
-    filteredCartProducts = cartItems.filter(function(product) {
-      return product.id !== cartId;
-    });
-    setCart(filteredCartProducts);
-  };
-  
-
-  const [dummyData] = useState([
-    {
-      id: '1',
-      name: 'Item1',
-      cost: 5.00,
-      qty: 1
-    },
-    {
-      id: '2',
-      name: 'Item2',
-      cost: 20.00,
-      qty: 1
-    },
-    {
-      id: '3',
-      name: 'Item3',
-      cost: 30.00,
-      qty: 1
-    },
-    {
-      id: '4',
-      name: 'Item4',
-      cost: 100.00,
-      qty: 1
+    const exist = favoriteItems.find(x => x.id === product.id);
+    if (!exist) {
+      setFavoriteItems([...favoriteItems, product]);
+    } else {
+      alert('Item is already in your favorites!');
     }
-])
+  }
+
+  const onRemoveFromFavorites = (product) => {
+    setFavoriteItems(favoriteItems.filter((x) => x.id !== product.id));
+  }
+  
+  const emptyCart = () => {
+    setCart([]);
+  }
+
+  const filterGender = (e) => {
+    setProducts(dummyData);
+    if (e.target.value !== 'allproducts') {
+      setProducts(products.filter((x) => {
+        if (e.target.value === 'mens') {
+          return x.gender === 'mens';
+        } else if (e.target.value === 'womens') {
+          return x.gender === 'womens';
+        }
+      }));
+    }
+  }
+
+  const filterProductType = (e) => {
+    setProducts(dummyData);
+    if (e.target.value !== 'allproducts') {
+      setProducts(products.filter((x) => {
+        if (e.target.value === 'hats') {
+          return x.name === 'Hat';
+        } else if (e.target.value === 'jackets') {
+          return x.name === 'Jacket';
+        } else if (e.target.value === 'shoes') {
+          return x.name === 'Shoes';
+        } else if (e.target.value === 'sweatshirts') {
+          return x.name === 'Sweatshirt';
+        }
+      }));
+    }
+  }
+
+  const resetFilters = () => {
+    document.getElementById('genderFilter').value = 'allproducts';
+    document.getElementById('productTypeFilter').value = 'allproducts';
+    setProducts(dummyData);
+  }
 
   return (
-    <div>
-      <MainNavigation cartItems={cartItems}/>
+    <div className='container'>
+      <br></br><br></br><br></br><br></br><br></br>
+      <MainNavigation cartItems={cartItems} favoriteItems={favoriteItems}/>
       <Switch>
-        <Route exact path='/products'>
-          <AllProductsPage dummyData={dummyData} onAddToCart={onAddToCart} onAddToFavorites={onAddToFavorites}/>
+        <Route exact path='/'>
+          <AllProductsPage products={products} onAddToCart={onAddToCart} onAddToFavorites={onAddToFavorites} filterGender={filterGender} filterProductType={filterProductType} resetFilters={resetFilters}/>
         </Route>
         <Route path='/favorites'>
-          <FavoritesProductsPage favoriteItems={favoriteItems} removeFromFavorites={removeFromFavorites}/>
+          <FavoritesProductsPage favoriteItems={favoriteItems} onRemoveFromFavorites={onRemoveFromFavorites}/>
         </Route>
         <Route path='/cart'>
-          <Cart cartItems={cartItems} removeFromCart={removeFromCart}/>
+          <Cart cartItems={cartItems} emptyCart={emptyCart} onAddToCart={onAddToCart} onRemoveFromCart={onRemoveFromCart}/>
         </Route>
       </Switch>
+      <br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+      <Footer />
     </div>
   )
 }
