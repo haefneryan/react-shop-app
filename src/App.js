@@ -1,5 +1,5 @@
 import { Route, Switch } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import AllProductsPage from './pages/AllProducts';
 import FavoritesProductsPage from './pages/Favorites';
@@ -12,6 +12,10 @@ import Footer from './components/layout/Footer';
 function App() {
   const dummyData = data;
   const [products, setProducts] = useState(dummyData);
+  const [productFilters, setProductFilters] = useState({
+    gender: "",
+    type: ""
+  });
   const [cartItems, setCart] = useState([]);
   const [favoriteItems, setFavoriteItems] = useState([]);
 
@@ -51,40 +55,46 @@ function App() {
   }
 
   const filterGender = (e) => {
-    setProducts(dummyData);
-    if (e.target.value !== 'allproducts') {
-      setProducts(products.filter((x) => {
-        if (e.target.value === 'mens') {
-          return x.gender === 'mens';
-        } else if (e.target.value === 'womens') {
-          return x.gender === 'womens';
-        }
-      }));
-    }
+    console.log(productFilters);
+    setProductFilters({
+      ...productFilters,
+      gender: e.target.value
+    });
+    console.log(productFilters);
   }
 
   const filterProductType = (e) => {
-    setProducts(dummyData);
-    if (e.target.value !== 'allproducts') {
-      setProducts(products.filter((x) => {
-        if (e.target.value === 'hats') {
-          return x.name === 'Hat';
-        } else if (e.target.value === 'jackets') {
-          return x.name === 'Jacket';
-        } else if (e.target.value === 'shoes') {
-          return x.name === 'Shoes';
-        } else if (e.target.value === 'sweatshirts') {
-          return x.name === 'Sweatshirt';
-        }
-      }));
-    }
+    setProductFilters({
+      ...productFilters,
+      type: e.target.value
+    });
   }
 
+  useEffect(() => {
+    setProducts(dummyData);
+    if (productFilters.gender !== '' && productFilters.type === '') {
+      setProducts(dummyData.filter((x) => {return x.gender === productFilters.gender}));
+    }
+    if (productFilters.type !== '' && productFilters.gender === '') {
+      setProducts(dummyData.filter((x) => {return productFilters.type.startsWith(x.name.toLowerCase())}));
+    }
+    if (productFilters.type !== '' && productFilters.gender !== '') {
+      setProducts(dummyData
+        .filter((x) => {return x.gender === productFilters.gender})
+        .filter((x) => {return productFilters.type.startsWith(x.name.toLowerCase())})
+        );
+    }
+  }, [productFilters]);
+
   const resetFilters = () => {
-    document.getElementById('genderFilter').value = 'allproducts';
-    document.getElementById('productTypeFilter').value = 'allproducts';
+    document.getElementById('genderFilter').value = '';
+    document.getElementById('productTypeFilter').value = '';
     setProducts(dummyData);
   }
+
+  useEffect(() => {
+    document.title = "React shop"
+  }, []);
 
   return (
     <div className='container'>

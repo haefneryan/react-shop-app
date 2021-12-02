@@ -5,12 +5,12 @@ import Filters from '../components/layout/Filters';
 import classes from '../components/products/Products.module.css'
 
 function AllProductsPage(props) {  
-    const { onAddToCart, onAddToFavorites, products, filterGender, resetFilters, filterProductType } = props;
+    const { onAddToCart, onAddToFavorites, products, filterGender, resetFilters, filterProductType, filterProducts } = props;
 
     return (
     <div>
         <h1>ALL PRODUCTS</h1>
-        <Filters filterGender={filterGender} filterProductType={filterProductType} resetFilters={resetFilters}/>
+        <Filters filterGender={filterGender} filterProductType={filterProductType} resetFilters={resetFilters} filterProducts={filterProducts}/>
 
         <div className={classes.container}>
         {products.map((product) => {
