@@ -3,7 +3,7 @@ import classes from '../components/products/Products.module.css';
 import Product from '../components/products/Product';
 
 function FavoritesProductsPage(props) {
-    const { favoriteItems, onRemoveFromFavorites } = props;
+    const { favoriteItems, onRemoveFromFavorites, onAddToCart } = props;
 
     return (
         <div>
@@ -14,6 +14,7 @@ function FavoritesProductsPage(props) {
                     return (
                         <div key={product.id} className={classes.card}>
                             <Product product={product}/>
+                            <button onClick={() => onAddToCart(product)}>ADD TO CART</button>
                             <button onClick={() => onRemoveFromFavorites(product)}>REMOVE</button>
                         </div>
                     )

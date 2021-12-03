@@ -84,7 +84,7 @@ function App() {
         .filter((x) => {return productFilters.type.startsWith(x.name.toLowerCase())})
         );
     }
-  }, [productFilters]);
+  }, [productFilters, dummyData]);
 
   const resetFilters = () => {
     document.getElementById('genderFilter').value = '';
@@ -105,7 +105,7 @@ function App() {
           <AllProductsPage products={products} onAddToCart={onAddToCart} onAddToFavorites={onAddToFavorites} filterGender={filterGender} filterProductType={filterProductType} resetFilters={resetFilters}/>
         </Route>
         <Route path='/favorites'>
-          <FavoritesProductsPage favoriteItems={favoriteItems} onRemoveFromFavorites={onRemoveFromFavorites}/>
+          <FavoritesProductsPage favoriteItems={favoriteItems} onRemoveFromFavorites={onRemoveFromFavorites} onAddToCart={onAddToCart}/>
         </Route>
         <Route path='/cart'>
           <Cart cartItems={cartItems} emptyCart={emptyCart} onAddToCart={onAddToCart} onRemoveFromCart={onRemoveFromCart}/>
